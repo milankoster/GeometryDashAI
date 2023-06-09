@@ -19,6 +19,7 @@ class GeometryDashEnvironment:
         self.state_space = image_size
 
         self.highest_rounded_percent = 0
+        self.revived = False
 
     def step(self, action):
         self.handle_action(action)
@@ -61,12 +62,15 @@ class GeometryDashEnvironment:
         processed_image = self.image_processor.process_screenshot(raw_image)
         return processed_image
 
+    def has_revived(self):
+        if not self.memory.is_dead():
+            self.revived = True
+        return self.revived
+
     @staticmethod
     def pause():
-        print('pause')
-        keyboard.press('escape')
+        keyboard.press_and_release('escape')
 
     @staticmethod
     def unpause():
-        print('unpause')
-        keyboard.press('space')
+        keyboard.press_and_release('space')

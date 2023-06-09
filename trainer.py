@@ -1,6 +1,7 @@
 import gc
 import os
 import random
+import absl.logging
 from collections import deque
 
 import gd
@@ -9,7 +10,6 @@ import pandas as pd
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
 from keras.models import Sequential
 from keras.optimizers import Adam
-
 from common.action import Action
 from environment import GeometryDashEnvironment
 
@@ -24,12 +24,11 @@ class Trainer:
         self.batch_size = 512
 
         self.episodes = 2000
-        self.is_training = True
 
         self.env = GeometryDashEnvironment()
         self.game_memory = gd.memory.get_memory()
 
-        self.memory = deque(maxlen=2000)
+        self.memory = deque(maxlen=1000)
         self.model = self.create_model()
         self.target_model = self.create_model()
 
@@ -41,6 +40,9 @@ class Trainer:
         self.attempts = []
         self.jumps = []
         self.total_jumps = self.env.memory.jumps
+
+        # Remove unintended warnings during training
+        absl.logging.set_verbosity(absl.logging.ERROR)
 
     def create_model(self):
         model = Sequential()
@@ -79,6 +81,9 @@ class Trainer:
         minibatch = random.sample(self.memory, self.batch_size)
         states, actions, rewards, next_states, dones = map(np.array, zip(*minibatch))
 
+        states = np.squeeze(states)
+        next_states = np.squeeze(next_states)
+
         targets = rewards + self.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) * (1 - dones)
         targets_full = self.model.predict_on_batch(states)
 
@@ -90,38 +95,44 @@ class Trainer:
             self.epsilon *= self.epsilon_decay
 
     def train(self, model_name):
-        while self.is_training:
-            for episode in range(1, self.episodes + 1):
-                gc.collect()
-                self.env = GeometryDashEnvironment()
-                self.env.unpauGese()
+        for episode in range(1, self.episodes + 1):
+            gc.collect()
+            self.env = GeometryDashEnvironment()
 
-                current_state = self.env.get_state()
-                epi_reward = 0
+            current_state = self.env.get_state()
+            # todo remove static values
+            current_state = np.reshape(current_state, (1, 160, 160, 1))
 
-                while True:
-                    if not self.env.memory.is_in_level():
-                        continue
+            epi_reward = 0
 
-                    action = self.act(current_state)
-                    new_state, reward, done = self.env.step(Action(action))
-                    if new_state is None:
-                        continue
+            while True:
+                if not self.env.memory.is_in_level():
+                    continue
+                if not self.env.has_revived():
+                    continue
 
-                    epi_reward += reward
+                action = self.act(current_state)
+                new_state, reward, done = self.env.step(Action(action))
 
-                    self.remember(current_state, action, reward, new_state, done)
+                if new_state is None:
+                    continue
+                new_state = np.reshape(new_state, (1, 160, 160, 1))
 
-                    current_state = new_state
+                epi_reward += reward
 
-                    if done:
-                        self.env.pause()
-                        self.replay()
+                self.remember(current_state, action, reward, new_state, done)
 
-                        self.log_episode(episode, epi_reward)
-                        self.save_model(model_name, episode)
-                        self.save_logs(model_name)
-                        break
+                current_state = new_state
+
+                if done:
+                    self.env.pause()
+                    self.replay()
+
+                    self.log_episode(episode, epi_reward)
+                    self.save_model(model_name, episode)
+                    self.save_logs(model_name)
+                    self.env.unpause()
+                    break
 
     def log_episode(self, episode, epi_reward):
         self.level_ids.append(self.env.memory.level_id)
