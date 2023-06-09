@@ -170,6 +170,10 @@ class Trainer:
             should_save = True
 
         if should_save:
-            file_name = f'../models/{model_name}/episode-{episode}.model'
+            print('saving')
+            file_name = f'models/{model_name}/episode-{episode}.model'
+            print('filename')
+            print(self.model)
+            print(type(self.model))
             os.makedirs(os.path.dirname(file_name), exist_ok=True)
             self.model.save(file_name)
