@@ -1,15 +1,16 @@
 import gc
 import os
 import random
-import absl.logging
 from collections import deque
 
+import absl.logging
 import gd
 import numpy as np
 import pandas as pd
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
 from keras.models import Sequential
 from keras.optimizers import Adam
+
 from common.action import Action
 from environment import GeometryDashEnvironment
 
@@ -21,7 +22,7 @@ class Trainer:
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.995
         self.learning_rate = 0.00025
-        self.batch_size = 512
+        self.batch_size = 128
 
         self.episodes = 2000
 
@@ -43,6 +44,7 @@ class Trainer:
 
         # Remove unintended warnings during training
         absl.logging.set_verbosity(absl.logging.ERROR)
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
     def create_model(self):
         model = Sequential()
@@ -60,13 +62,13 @@ class Trainer:
         model.add(Dense(32, activation='relu'))
 
         model.add(Dense(2, activation='softmax'))
-        model.compile(optimizer=Adam(learning_rate=self.learning_rate), loss='binary_crossentropy',
+        model.compile(optimizer=Adam(learning_rate=self.learning_rate), loss='categorical_crossentropy',
                       metrics=['accuracy'])
 
         return model
 
-    def act(self, state):
-        if np.random.rand() <= self.epsilon:
+    def act(self, state, evaluate=False):
+        if np.random.rand() <= self.epsilon and not evaluate:
             return random.randrange(self.env.action_space)
         act_values = self.model.predict(state, verbose=0)
         return np.argmax(act_values[0])
@@ -100,8 +102,9 @@ class Trainer:
             self.env = GeometryDashEnvironment()
 
             current_state = self.env.get_state()
-            # todo remove static values
-            current_state = np.reshape(current_state, (1, 160, 160, 1))
+            if current_state is None:
+                continue
+            current_state = np.reshape(current_state, (1, 160, 160, 1))  # todo remove static values
 
             epi_reward = 0
 
@@ -132,6 +135,9 @@ class Trainer:
                     self.save_model(model_name, episode)
                     self.save_logs(model_name)
                     self.env.unpause()
+
+                    if episode % 10 == 0:
+                        self.evaluate(episode)  # Evaluate every 10th episode
                     break
 
     def log_episode(self, episode, epi_reward):
@@ -170,10 +176,40 @@ class Trainer:
             should_save = True
 
         if should_save:
-            print('saving')
             file_name = f'models/{model_name}/episode-{episode}.model'
-            print('filename')
-            print(self.model)
-            print(type(self.model))
             os.makedirs(os.path.dirname(file_name), exist_ok=True)
             self.model.save(file_name)
+
+    def evaluate(self, episode):
+        gc.collect()
+        self.env = GeometryDashEnvironment()
+
+        current_state = self.env.get_state()
+        current_state = np.reshape(current_state, (1, 160, 160, 1))
+
+        epi_reward = 0
+
+        while True:
+            if not self.env.memory.is_in_level():
+                continue
+            if not self.env.has_revived():
+                continue
+
+            action = self.act(current_state, evaluate=True)
+            print(action)
+            new_state, reward, done = self.env.step(Action(action))
+
+            if new_state is None:
+                continue
+            new_state = np.reshape(new_state, (1, 160, 160, 1))
+
+            epi_reward += reward
+
+            current_state = new_state
+
+            if done:
+                episode_jumps = self.env.memory.jumps - self.total_jumps
+
+                print(f'EVALUATION: episodes so far: {episode}, level progress: {self.env.memory.percent}, '
+                      f'reward: {epi_reward}, jumps: {episode_jumps}, epsilon: {self.epsilon}')
+                break

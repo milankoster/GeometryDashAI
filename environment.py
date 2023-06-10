@@ -25,9 +25,9 @@ class GeometryDashEnvironment:
         self.handle_action(action)
 
         if self.memory.is_dead():
-            reward = -1000
-        elif action == Action.JUMP:
-            reward = -1
+            reward = -100
+        # elif action == Action.JUMP:
+        #     reward = -1
         elif self.percentage_improved():
             reward = 10
         else:
