@@ -16,7 +16,7 @@ class GeometryDashInterface:
 
     @staticmethod
     def jump():
-        mouse.press()
+        mouse.click()
 
     @staticmethod
     def no_jump():
