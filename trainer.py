@@ -184,8 +184,6 @@ class Trainer:
         gc.collect()
         self.env = GeometryDashEnvironment()
 
-        start_time, fps = time.perf_counter(), 0
-
         current_state = self.env.get_state()
         current_state = np.reshape(current_state, (1, 160, 160, 1))
 
