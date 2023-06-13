@@ -184,6 +184,8 @@ class Trainer:
         gc.collect()
         self.env = GeometryDashEnvironment()
 
+        start_time, fps = time.perf_counter(), 0
+
         current_state = self.env.get_state()
         current_state = np.reshape(current_state, (1, 160, 160, 1))
 
@@ -201,11 +203,9 @@ class Trainer:
 
             if new_state is None:
                 continue
-            new_state = np.reshape(new_state, (1, 160, 160, 1))
+            current_state = np.reshape(new_state, (1, 160, 160, 1))
 
             epi_reward += reward
-
-            current_state = new_state
 
             if done:
                 episode_jumps = self.env.memory.jumps - self.total_jumps
