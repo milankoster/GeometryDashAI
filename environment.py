@@ -1,7 +1,7 @@
 import gd
-import math
 
 import keyboard as keyboard
+import time
 
 from common.action import Action
 from common.constants import image_size
@@ -24,35 +24,37 @@ class GeometryDashEnvironment:
     def step(self, action):
         self.handle_action(action)
 
-        if self.memory.is_dead():
-            reward = -100
-        # elif action == Action.JUMP:
-        #     reward = -1
-        elif self.percentage_improved():
-            reward = 10
-        else:
-            reward = 0
+        reward = self.get_reward(action)
 
         done = self.memory.is_dead()
 
         return self.get_state(), reward, done
 
+    def get_reward(self, action):
+        reward = 0
+
+        if self.memory.is_dead():
+            reward += -100
+
+        if action == Action.JUMP:
+            reward += 20
+
+        if self.memory.percent > 2:
+            reward += self.memory.percent
+
+        if self.memory.percent > 99:
+            reward += 1000
+
+        return reward
+
     def handle_action(self, action):
         if action == Action.JUMP:
             self.game_interface.jump()
+            time.sleep(0.35)
         elif action == Action.NOTHING:
             self.game_interface.no_jump()
         else:
             raise Exception('Invalid Action')
-
-    def percentage_improved(self):
-        current_percent = self.memory.percent
-        rounded_percent = math.floor(current_percent)
-
-        if rounded_percent > self.highest_rounded_percent:
-            self.highest_rounded_percent = rounded_percent
-            return True
-        return False
 
     def get_state(self):
         raw_image = self.game_interface.screenshot()

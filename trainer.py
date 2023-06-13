@@ -196,7 +196,6 @@ class Trainer:
                 continue
 
             action = self.act(current_state, evaluate=True)
-            print(action)
             new_state, reward, done = self.env.step(Action(action))
 
             if new_state is None:
@@ -209,5 +208,5 @@ class Trainer:
                 episode_jumps = self.env.memory.jumps - self.total_jumps
 
                 print(f'EVALUATION: episodes so far: {episode}, level progress: {self.env.memory.percent}, '
-                      f'reward: {epi_reward}, jumps: {episode_jumps}, epsilon: {self.epsilon}')
+                      f'reward: {epi_reward}, jumps: {episode_jumps}')
                 break
