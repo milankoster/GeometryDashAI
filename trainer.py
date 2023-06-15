@@ -136,7 +136,7 @@ class Trainer:
                     self.save_logs(model_name)
                     self.env.unpause()
 
-                    if episode % 10 == 0:
+                    if episode % 9 == 0:
                         self.evaluate(episode)  # Evaluate every 10th episode
                     break
 
@@ -196,7 +196,6 @@ class Trainer:
                 continue
 
             action = self.act(current_state, evaluate=True)
-            print(action)
             new_state, reward, done = self.env.step(Action(action))
 
             if new_state is None:
