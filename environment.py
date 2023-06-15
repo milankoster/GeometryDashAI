@@ -1,6 +1,4 @@
 import gd
-import math
-
 import keyboard as keyboard
 
 from common.action import Action
