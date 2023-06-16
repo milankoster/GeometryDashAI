@@ -4,7 +4,6 @@ import random
 from collections import deque
 
 import absl.logging
-import gd
 import numpy as np
 import pandas as pd
 from keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
@@ -28,7 +27,6 @@ class Trainer:
         self.episodes = 2000
 
         self.env = GeometryDashEnvironment()
-        self.game_memory = gd.memory.get_memory()
 
         self.memory = deque(maxlen=2500)
         self.model = self.create_model()
