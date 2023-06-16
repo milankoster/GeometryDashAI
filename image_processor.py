@@ -27,5 +27,8 @@ class ImageProcessor:
         # Resize the image to the target size
         img = cv2.resize(img, (image_width, image_height))
 
-        return img
+        img.astype('float32')
+        scaled_img = img / 255
+
+        return scaled_img
 
