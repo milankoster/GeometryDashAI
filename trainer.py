@@ -29,9 +29,11 @@ class Trainer:
         self.env = GeometryDashEnvironment()
         self.game_memory = gd.memory.get_memory()
 
-        self.memory = deque(maxlen=1000)
+        self.memory = deque(maxlen=2500)
         self.model = self.create_model()
         self.target_model = self.create_model()
+        self.update_counter = 0
+        self.target_update_freq = 5
 
         # Logging values per run
         self.level_ids = []
@@ -49,8 +51,7 @@ class Trainer:
     def create_model(self):
         model = Sequential()
 
-        # todo move to constants
-        model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(160, 160, 1)))
+        model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(320, 320, 3)))
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Conv2D(32, (3, 3), activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -86,7 +87,9 @@ class Trainer:
         states = np.squeeze(states)
         next_states = np.squeeze(next_states)
 
-        targets = rewards + self.gamma * (np.amax(self.model.predict_on_batch(next_states), axis=1)) * (1 - dones)
+        # Generate the target values using the target model
+        target_q_values = self.target_model.predict_on_batch(next_states)
+        targets = rewards + self.gamma * np.amax(target_q_values, axis=1) * (1 - dones)
         targets_full = self.model.predict_on_batch(states)
 
         ind = np.array([i for i in range(self.batch_size)])
@@ -96,6 +99,13 @@ class Trainer:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
+        # Update the target model periodically
+        target_update_freq = 2
+
+        if self.update_counter % target_update_freq == 0:
+            self.target_model.set_weights(self.model.get_weights())
+        self.update_counter += 1
+
     def train(self, model_name):
         for episode in range(1, self.episodes + 1):
             gc.collect()
@@ -104,7 +114,7 @@ class Trainer:
             current_state = self.env.get_state()
             if current_state is None:
                 continue
-            current_state = np.reshape(current_state, (1, 160, 160, 1))  # todo remove static values
+            current_state = np.reshape(current_state, (1, 320, 320, 3))
 
             epi_reward = 0
 
@@ -119,7 +129,7 @@ class Trainer:
 
                 if new_state is None:
                     continue
-                new_state = np.reshape(new_state, (1, 160, 160, 1))
+                new_state = np.reshape(new_state, (1, 320, 320, 3))
 
                 epi_reward += reward
 
@@ -137,7 +147,7 @@ class Trainer:
                     self.env.unpause()
 
                     if episode % 9 == 0:
-                        self.evaluate(episode)  # Evaluate every 10th episode
+                        self.evaluate()  # Evaluate every 10th episode
                     break
 
     def log_episode(self, episode, epi_reward):
@@ -180,12 +190,12 @@ class Trainer:
             os.makedirs(os.path.dirname(file_name), exist_ok=True)
             self.model.save(file_name)
 
-    def evaluate(self, episode):
+    def evaluate(self):
         gc.collect()
         self.env = GeometryDashEnvironment()
 
         current_state = self.env.get_state()
-        current_state = np.reshape(current_state, (1, 160, 160, 1))
+        current_state = np.reshape(current_state, (1, 320, 320, 3))
 
         epi_reward = 0
 
@@ -200,13 +210,13 @@ class Trainer:
 
             if new_state is None:
                 continue
-            current_state = np.reshape(new_state, (1, 160, 160, 1))
+            current_state = np.reshape(new_state, (1, 320, 320, 3))
 
             epi_reward += reward
 
             if done:
                 episode_jumps = self.env.memory.jumps - self.total_jumps
 
-                print(f'EVALUATION: episodes so far: {episode}, level progress: {self.env.memory.percent}, '
+                print(f'EVALUATION: level progress: {self.env.memory.percent}, '
                       f'reward: {epi_reward}, jumps: {episode_jumps}')
                 break
