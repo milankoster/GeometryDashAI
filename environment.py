@@ -1,4 +1,5 @@
 import gd
+import time
 import keyboard as keyboard
 
 from common.action import Action
@@ -33,6 +34,7 @@ class GeometryDashEnvironment:
     def handle_action(self, action):
         if action == Action.JUMP:
             self.game_interface.jump()
+            time.sleep(sleep_duration)
         elif action == Action.NOTHING:
             self.game_interface.no_jump()
         else:
@@ -40,8 +42,6 @@ class GeometryDashEnvironment:
 
     def get_state(self):
         raw_image = self.game_interface.screenshot()
-        if raw_image is None:
-            return None
 
         processed_image = self.image_processor.process_screenshot(raw_image)
         return processed_image
