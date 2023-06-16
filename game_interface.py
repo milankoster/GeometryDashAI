@@ -12,7 +12,13 @@ class GeometryDashInterface:
         return cls._instance
 
     def screenshot(self):
-        return self.camera.grab()
+        image = None
+
+        # camera.grab can very occasionally return None
+        while image is None:
+            image = self.camera.grab()
+
+        return image
 
     @staticmethod
     def jump():

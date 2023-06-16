@@ -113,8 +113,6 @@ class Trainer:
             self.env = GeometryDashEnvironment()
 
             current_state = self.env.get_state()
-            if current_state is None:
-                continue
             current_state = np.reshape(current_state, (1, image_width, image_height, image_dimensions))
 
             epi_reward = 0
@@ -128,8 +126,6 @@ class Trainer:
                 action = self.act(current_state)
                 new_state, reward, done = self.env.step(Action(action))
 
-                if new_state is None:
-                    continue
                 new_state = np.reshape(new_state, (1, image_width, image_height, image_dimensions))
 
                 epi_reward += reward
@@ -209,8 +205,6 @@ class Trainer:
             action = self.act(current_state, evaluate=True)
             new_state, reward, done = self.env.step(Action(action))
 
-            if new_state is None:
-                continue
             current_state = np.reshape(new_state, (1, image_width, image_height, image_dimensions))
 
             epi_reward += reward
