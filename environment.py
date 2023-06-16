@@ -17,7 +17,6 @@ class GeometryDashEnvironment:
         self.action_space = 2
         self.state_space = (image_width, image_height)
 
-        self.highest_rounded_percent = 0
         self.revived = False
 
     def step(self, action):
