@@ -12,6 +12,7 @@ from keras.models import Sequential
 from keras.optimizers import Adam
 
 from common.action import Action
+from common.constants import *
 from environment import GeometryDashEnvironment
 
 
@@ -51,7 +52,7 @@ class Trainer:
     def create_model(self):
         model = Sequential()
 
-        model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(320, 320, 3)))
+        model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(image_width, image_height, image_dimensions)))
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Conv2D(32, (3, 3), activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -114,7 +115,7 @@ class Trainer:
             current_state = self.env.get_state()
             if current_state is None:
                 continue
-            current_state = np.reshape(current_state, (1, 320, 320, 3))
+            current_state = np.reshape(current_state, (1, image_width, image_height, image_dimensions))
 
             epi_reward = 0
 
@@ -129,7 +130,7 @@ class Trainer:
 
                 if new_state is None:
                     continue
-                new_state = np.reshape(new_state, (1, 320, 320, 3))
+                new_state = np.reshape(new_state, (1, image_width, image_height, image_dimensions))
 
                 epi_reward += reward
 
@@ -195,7 +196,7 @@ class Trainer:
         self.env = GeometryDashEnvironment()
 
         current_state = self.env.get_state()
-        current_state = np.reshape(current_state, (1, 320, 320, 3))
+        current_state = np.reshape(current_state, (1, image_width, image_height, image_dimensions))
 
         epi_reward = 0
 
@@ -210,7 +211,7 @@ class Trainer:
 
             if new_state is None:
                 continue
-            current_state = np.reshape(new_state, (1, 320, 320, 3))
+            current_state = np.reshape(new_state, (1, image_width, image_height, image_dimensions))
 
             epi_reward += reward
 

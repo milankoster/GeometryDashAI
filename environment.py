@@ -2,7 +2,7 @@ import gd
 import keyboard as keyboard
 
 from common.action import Action
-from common.constants import image_size
+from common.constants import *
 from game_interface import GeometryDashInterface
 from image_processor import ImageProcessor
 
@@ -14,7 +14,7 @@ class GeometryDashEnvironment:
         self.image_processor = ImageProcessor()
 
         self.action_space = 2
-        self.state_space = image_size
+        self.state_space = (image_width, image_height)
 
         self.highest_rounded_percent = 0
         self.revived = False
