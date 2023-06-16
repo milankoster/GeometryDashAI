@@ -24,7 +24,7 @@ class ImageProcessor:
             border_h = int(((width / height) * img.shape[0] - img.shape[1]) / 2)
 
         # Apply border padding
-        img = cv2.copyMakeBorder(img, border_v, border_v, border_h, border_h, cv2.BORDER_CONSTANT, 0)
+        img = cv2.copyMakeBorder(img, border_v, border_v, border_h, border_h, cv2.BORDER_CONSTANT, value=(0, 0, 0))
 
         # Resize the image to the target size
         img = cv2.resize(img, (width, height))

@@ -1,1 +1,1 @@
-image_size = (160, 160)
+image_size = (320, 320)
