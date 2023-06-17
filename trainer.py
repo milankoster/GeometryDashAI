@@ -157,7 +157,6 @@ class Trainer:
 
     def save_logs(self, model_name):
         df = pd.DataFrame()
-        df['Level_ID'] = self.level_ids
         df['Attempt'] = self.attempts
 
         df['Percentages'] = self.percentages
