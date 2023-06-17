@@ -197,8 +197,6 @@ class Trainer:
             if not self.env.has_revived():
                 continue
 
-            fps += 1
-
             action = self.act(current_state, evaluate=True)
 
             new_state, reward, done = self.env.step(Action(action))
