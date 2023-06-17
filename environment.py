@@ -20,10 +20,7 @@ class GeometryDashEnvironment:
     def step(self, action):
         self.handle_action(action)
 
-        reward = 0
-
-        reward += self.memory.percent * 10
-
+        reward = self.memory.percent * 10
         done = self.memory.is_dead()
 
         return self.get_state(), reward, done
