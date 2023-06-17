@@ -73,11 +73,6 @@ class Trainer:
             return random.randrange(self.env.action_space)
         act_values = self.model.predict(state, verbose=0)
         act_values = act_values[0]
-        # Check if the first value is smaller than 0.9
-        if act_values[0] < 0.999:
-            return 1  # Predict 1
-        else:
-            return np.argmax(act_values)  # Predict the index with the highest value
 
         return np.argmax(act_values)
 
