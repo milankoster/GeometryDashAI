@@ -10,7 +10,7 @@ from game_interface import GeometryDashInterface
 from common.image_processor import ImageProcessor
 
 
-class ImitationLearner:
+class Recorder:
     def __init__(self):
         self.memory = gd.memory.get_memory()
         self.game_interface = GeometryDashInterface()
