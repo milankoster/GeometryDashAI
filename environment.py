@@ -36,8 +36,8 @@ class GeometryDashEnvironment:
 
     def get_state(self):
         raw_image = self.game_interface.screenshot()
-
         processed_image = self.image_processor.process_screenshot(raw_image)
+
         return processed_image
 
     def has_revived(self):
