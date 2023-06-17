@@ -70,7 +70,7 @@ class Trainer:
     def act(self, state, evaluate=False):
         if np.random.rand() <= self.epsilon and not evaluate:
             return random.randrange(self.env.action_space)
-        act_values = self.model.predict(state, verbose=0)
+        act_values = self.target_model.predict(state, verbose=0)
         act_values = act_values[0]
 
         return np.argmax(act_values)
