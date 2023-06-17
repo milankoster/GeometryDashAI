@@ -204,7 +204,6 @@ class Trainer:
             action = self.act(current_state, evaluate=True)
 
             new_state, reward, done = self.env.step(Action(action))
-            print(action)
 
             current_state = np.reshape(new_state, (1, image_width, image_height, image_dimensions))
 
