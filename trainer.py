@@ -191,8 +191,6 @@ class Trainer:
 
         epi_reward = 0
 
-        start_time, fps = time.perf_counter(), 0
-
         while True:
             if not self.env.memory.is_in_level():
                 continue
@@ -214,6 +212,4 @@ class Trainer:
 
                 print(f'EVALUATION: level progress: {self.env.memory.percent}, '
                       f'reward: {epi_reward}, jumps: {episode_jumps}')
-                end_time = time.perf_counter() - start_time
-                print(f"Benchmark: {fps / end_time}")
                 break
