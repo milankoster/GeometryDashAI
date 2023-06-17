@@ -33,10 +33,9 @@ class Trainer:
         self.model = self.create_model()
         self.target_model = self.create_model()
         self.update_counter = 0
-        self.target_update_freq = 5
+        self.target_update_freq = 3
 
         # Logging values per run
-        self.level_ids = []
         self.percentages = []
         self.rewards = []
 
@@ -101,10 +100,7 @@ class Trainer:
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
 
-        # Update the target model periodically
-        target_update_freq = 2
-
-        if self.update_counter % target_update_freq == 0:
+        if self.update_counter % self.target_update_freq == 0:
             self.target_model.set_weights(self.model.get_weights())
         self.update_counter += 1
 
@@ -149,9 +145,7 @@ class Trainer:
                     break
 
     def log_episode(self, episode, epi_reward):
-        self.level_ids.append(self.env.memory.level_id)
         self.attempts.append(self.env.memory.attempts)
-
         self.percentages.append(self.env.memory.percent)
         self.rewards.append(epi_reward)
 
