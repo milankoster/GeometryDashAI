@@ -5,7 +5,7 @@ import keyboard as keyboard
 from common.action import Action
 from common.constants import *
 from game_interface import GeometryDashInterface
-from image_processor import ImageProcessor
+from common.image_processor import ImageProcessor
 
 
 class GeometryDashEnvironment:

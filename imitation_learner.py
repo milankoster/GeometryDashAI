@@ -7,7 +7,7 @@ import pandas as pd
 
 from environment import GeometryDashEnvironment
 from game_interface import GeometryDashInterface
-from image_processor import ImageProcessor
+from common.image_processor import ImageProcessor
 
 
 class ImitationLearner:
