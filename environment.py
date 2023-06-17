@@ -15,8 +15,6 @@ class GeometryDashEnvironment:
         self.image_processor = ImageProcessor()
 
         self.action_space = 2
-        self.state_space = (image_width, image_height)
-
         self.revived = False
 
     def step(self, action):
