@@ -71,7 +71,14 @@ class Trainer:
         if np.random.rand() <= self.epsilon and not evaluate:
             return random.randrange(self.env.action_space)
         act_values = self.model.predict(state, verbose=0)
-        return np.argmax(act_values[0])
+        act_values = act_values[0]
+        # Check if the first value is smaller than 0.9
+        if act_values[0] < 0.999:
+            return 1  # Predict 1
+        else:
+            return np.argmax(act_values)  # Predict the index with the highest value
+
+        return np.argmax(act_values)
 
     def remember(self, state, action, reward, new_state, done):
         self.memory.append((state, action, reward, new_state, done))
@@ -201,7 +208,9 @@ class Trainer:
                 continue
 
             action = self.act(current_state, evaluate=True)
+
             new_state, reward, done = self.env.step(Action(action))
+            print(action)
 
             current_state = np.reshape(new_state, (1, image_width, image_height, image_dimensions))
 
