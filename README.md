@@ -2,16 +2,7 @@
 This project explores two project reinforcement learning approaches to train an agent to play Geometry Dash. The aim is to gain experience in applying reinforcement learning to a pre-built environment and assess the feasibility of reinforcement learning in Geometry Dash. 
 
 ## Reinforcement Learning
-In the first approach we utilised basic reinforcement learning. Although this was not successful, several configurations were attempted, including:
-
-- Various model architectures.
-- Various reward functions.
-- Utilization of a target model.
-- Episodes: 500, 1000, 2000.
-- Image size: 160, 320, 640.
-- Epsilon decay rate: 0.95, 0.99, 0.995.
-- Epsilon minimum: 0.001, 0.01, 0.10.
-- Training queue size: 1000, 2500.
+In the first approach we utilised basic reinforcement learning. Although this was not successful, several configurations were attempted including various model architectures, reward functions, episode lengths, image sizes and epsilon decay values. We also played around with a target model to stabilise training.
 
 Changes to the reward function were the most impactful. Punishing jumping to discourage random jumps resulted in the model never jumping. However, solely rewarding progress in the level caused the model to struggle in consistently identifying patterns.. 
 
