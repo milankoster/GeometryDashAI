@@ -2,11 +2,11 @@
 This project explores two project reinforcement learning approaches to train an agent to play Geometry Dash. The aim is to gain experience in applying reinforcement learning to a pre-built environment and assess the feasibility of reinforcement learning in Geometry Dash. 
 
 ## Reinforcement Learning
-In the first approach we utilised basic reinforcement learning. Although this was not successful, several configurations were attempted including various model architectures, reward functions, episode lengths, image sizes and epsilon decay values. We also played around with a target model to stabilise training.
+In the first approach I applied basic reinforcement learning. Although this approach was unsuccessful, I made numerous attempts to fine-tune the system by experimenting with different configurations. These included variations in model architectures, reward functions, episode lengths, image sizes and epsilon decay values. Additionally, I explored the use of a target model to increase training stability. 
 
-Changes to the reward function were the most impactful. Punishing jumping to discourage random jumps resulted in the model never jumping. However, solely rewarding progress in the level caused the model to struggle in consistently identifying patterns.
+Among the modifications, altering the reward function had the most impact. To discourage random jumps we penalized this behavior, but this led to the model never jumping at all. However, when we solely rewarded progress in the level, the model struggled to consistently identify patterns.
 
-In some cases, the model would initially learn to perform quite well but worsen over time. The main hypothesis is that this is due to the low framerate. While the screen can be recorded at 30 to 60 frames per second, model predictions slow this process down significantly. A potential solution would be to run predictions in parallel. 
+In some instances, the model initially performed quite well but worsened over time. My primary hypothesis is that this is due to the low framerate. While the screen recorder was able to capture 30 to 60 frames per second, the model’s predictions significantly slowed this process down. A potential solution to mitigate this issue would be to run predictions in parallel.
 
 ## Imitation Learning
 The second approach involved using imitation learning. The model was trained using a dataset consisting of 6 successful runs of the first level, allowing it to imitate human behavior.
