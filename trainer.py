@@ -139,8 +139,8 @@ class Trainer:
                     self.save_logs(model_name)
                     self.env.unpause()
 
-                    if episode % 9 == 0:
-                        self.evaluate()  # Evaluate every 10th episode
+                    if episode % 10 == 0:
+                        self.evaluate()
                     break
 
     def log_episode(self, episode, epi_reward):
@@ -163,6 +163,9 @@ class Trainer:
         df['Rewards'] = self.rewards
 
         df['Jumps'] = self.jumps
+
+        if not os.path.exists('results'):
+            os.mkdir('results')
         df.to_csv(f'results/{model_name}.csv')
 
     def save_model(self, model_name, episode):
@@ -209,3 +212,8 @@ class Trainer:
                 print(f'EVALUATION: level progress: {self.env.memory.percent}, '
                       f'reward: {epi_reward}, jumps: {episode_jumps}')
                 break
+
+
+if __name__ == '__main__':
+    trainer = Trainer()
+    trainer.train('base')
