@@ -9,12 +9,11 @@ Among the modifications, altering the reward function had the most impact. To di
 In some instances, the model initially performed quite well but worsened over time. My primary hypothesis is that this is due to the low framerate. While the screen recorder was able to capture 30 to 60 frames per second, the model’s predictions significantly slowed this process down. A potential solution to mitigate this issue would be to run predictions in parallel.
 
 ## Imitation Learning
-The second approach involved using imitation learning. The model was trained using a dataset consisting of 6 successful runs of the first level, allowing it to imitate human behavior.
+The second approach involved using imitation learning. The model was trained using a dataset consisting of 6 successful runs of the first level, allowing it to imitate human behaviour. 
 
-Imitation learning significantly improved the model's performance, enabling it to understand when to jump and achieve greater progress in the game levels. 
+The imitation learning model was built as a custom CNN model, with an input of 320 by 320 pixels, 3 convolutional layers, and 2 output neurons. The full details can be found in the Imitation Learning notebook. The model was tested on both a validation and testing set, with an accuracy of approximately 92%. 
 
-Although the model is able to get much further than before, it is unable to complete the level. One of the reasons for this limitation is once again the framerate issue. While the model can accurately predict the appropriate frame to jump, it still fails when it is not shown the correct frame.
+It is possible to introduce a bias, by changing the prediction threshold as described in chapter 6.4. However, when evaluating the model on the game, I found that this was not necessary. Imitation learning significantly improved the model's performance, enabling it to understand when to jump and achieve greater progress in the game levels.
 
-The model is also able to play small portions of levels it has never seen, assuming the environment looks similar. This confirms it is able to abstract some basic principles. 
-
+Although the model is able to get much further, it is not able to complete any levels. One of the reasons for this limitation is once again the framerate issue. While the model can accurately predict the appropriate frame to jump, it still fails when it is not shown the correct frame. The model is also able to play small portions of levels it has never seen, assuming the environment looks similar. This confirms it is able to abstract some basic principles.
 In future work, it would be interesting to explore the further development of this model using other reinforcement learning techniques.
