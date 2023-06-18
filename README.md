@@ -6,12 +6,14 @@ In the first approach I applied basic reinforcement learning. Although this appr
 
 Among the modifications, altering the reward function had the most impact. To discourage random jumps we penalized this behavior, but this led to the model never jumping at all. However, when we solely rewarded progress in the level, the model struggled to consistently identify patterns.
 
+![image](https://github.com/milankoster/GeometryDashAI/assets/58393068/a3e5021b-3b84-4fe6-bc85-2ff833d86c09)
+
 In some instances, the model initially performed quite well but worsened over time. My primary hypothesis is that this is due to the low framerate. While the screen recorder was able to capture 30 to 60 frames per second, the model’s predictions significantly slowed this process down. A potential solution to mitigate this issue would be to run predictions in parallel.
 
 ## Imitation Learning
 The second approach involved using imitation learning. The model was trained using a dataset consisting of 6 successful runs of the first level, allowing it to imitate human behaviour. 
 
-The imitation learning model was built as a custom CNN model, with an input of 320 by 320 pixels, 3 convolutional layers, and 2 output neurons. The full details can be found in the Imitation Learning notebook. The model was tested on both a validation and testing set, with an accuracy of approximately 92%. 
+The imitation learning model was built as a custom CNN model, with an input of 320 by 320 pixels, 3 convolutional layers, and 2 output neurons. The full details can be found in the [Imitation Learning](https://github.com/milankoster/GeometryDashAI/blob/master/Imitation%20Learning.ipynb) notebook. The model was tested on both a validation and testing set, with an accuracy of approximately 92%. 
 
 ![image](https://github.com/milankoster/GeometryDashAI/assets/58393068/040784dc-4e62-40ba-8c0f-49e67cf0a9ad)
 
