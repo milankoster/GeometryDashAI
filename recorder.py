@@ -71,3 +71,8 @@ class Recorder:
             cv2.imwrite(f'screenshots/{image_name}', image)
 
         print('Successful run saved.')
+
+
+if __name__ == '__main__':
+    recorder = Recorder()
+    recorder.record()
