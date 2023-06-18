@@ -164,9 +164,9 @@ class Trainer:
 
         df['Jumps'] = self.jumps
 
-        if not os.path.exists('results'):
-            os.mkdir('results')
-        df.to_csv(f'results/{model_name}.csv')
+        file_name = f'results/{model_name}.csv'
+        os.makedirs(os.path.dirname(file_name), exist_ok=True)
+        df.to_csv(file_name)
 
     def save_model(self, model_name, episode):
         should_save = False
