@@ -1,29 +1,29 @@
 # Snake Q Learning
-This project uses two project reinforcement learning approached to train an agent to play Geometry Dash. The aim is to gain experience in applying reinforcement learning to a pre-built environment and explore the feasibility of reinforcement learning in Geometry Dash. 
+This project explores two project reinforcement learning approaches to train an agent to play Geometry Dash. The aim is to gain experience in applying reinforcement learning to a pre-built environment and assess the feasibility of reinforcement learning in Geometry Dash. 
 
 ## Reinforcement Learning
-The first approach to the problem was to use basic reinforcement learning. While this approach was not successful, a number of configurations were attempted. These variations included, but were not limited to:
+The first approach to the problem was to use basic reinforcement learning. Although this approach was not successful, several configurations were attempted, including:
 
-- Various model configurations.
+- Various model architectures.
 - Various reward functions.
-- Use of a target model.
+- Utilization of a target model.
 - Episodes: 500, 1000, 2000.
 - Image size: 160, 320, 640.
 - Epsilon decay rate: 0.95, 0.99, 0.995.
 - Epsilon minimum: 0.001, 0.01, 0.10.
-- Training queue: 1000, 2500.
+- Training queue size: 1000, 2500.
 
-The most impactful of these were changes to the reward function. Punishing jumping to discourage random jumps results in the model never jumping. However, when solely awarding level progress the model would fail to consistently pick up patterns.  
+Changes to the reward function were the most impactful. Punishing jumping to discourage random jumps resulted in the model never jumping. However, solely rewarding progress in the level caused the model to struggle in consistently identifying patterns.. 
 
-In some cases, the model would learn to perform quite well, but worsen over time. The main hypothesis is that this is due to the low framerate. While the screen can be recorded at 30 to 60 frames per second, model predictions slow this down significantly. A potential solution would be to run predictions in parallel. 
+In some cases, the model would initially learn to perform quite well but worsen over time. The main hypothesis is that this is due to the low framerate. While the screen can be recorded at 30 to 60 frames per second, model predictions slow this process down significantly. A potential solution would be to run predictions in parallel. 
 
 ## Imitation Learning
-The second approach involved using imitation learning. The model was trained using a dataset of 6 successful runs of the first level, allowing it to imitate human behavior. 
+The second approach involved using imitation learning. The model was trained using a dataset consisting of 6 successful runs of the first level, allowing it to imitate human behavior.
 
-The use of imitation learning significantly improved the model's performance, enabling it to understand when to jump and achieve greater progress in the game levels. 
+Imitation learning significantly improved the model's performance, enabling it to understand when to jump and achieve greater progress in the game levels. 
 
-However, while the model was able to get much further, it was unable to complete the level. One of the reasons for this is once again the framerate. While the model can accurate predict during which frame to jump, it will still die if it never gets to see the correct frame.
+Although the model is able to get much further than before, it is unable to complete the level. One of the reasons for this limitation is once again the framerate issue. While the model can accurately predict the appropriate frame to jump, it still fails when it is not shown the correct frame.
 
-The model is also able to play small portions of levels it has never seen, assuming the environment looks similar. This confirms it is able to abstract some basic principles. Of course, when the model runs into obstacles or mechanics it has never encountered, it does not perform well.
+The model is also able to play small portions of levels it has never seen, assuming the environment looks similar. This confirms it is able to abstract some basic principles. 
 
-In the future, it may be interesting to see whether the model from this approach can be developed further using other reinforcement learning techniques.
+In future work, it would be interesting to explore the further development of this model using other reinforcement learning techniques.
