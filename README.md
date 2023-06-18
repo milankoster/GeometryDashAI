@@ -2,7 +2,7 @@
 This project explores two project reinforcement learning approaches to train an agent to play Geometry Dash. The aim is to gain experience in applying reinforcement learning to a pre-built environment and assess the feasibility of reinforcement learning in Geometry Dash. 
 
 ## Reinforcement Learning
-The first approach to the problem was to use basic reinforcement learning. Although this approach was not successful, several configurations were attempted, including:
+In the first approach we utilised basic reinforcement learning. Although this was not successful, several configurations were attempted, including:
 
 - Various model architectures.
 - Various reward functions.
