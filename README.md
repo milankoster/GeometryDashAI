@@ -4,7 +4,7 @@ This project explores two project reinforcement learning approaches to train an 
 ## Reinforcement Learning
 In the first approach we utilised basic reinforcement learning. Although this was not successful, several configurations were attempted including various model architectures, reward functions, episode lengths, image sizes and epsilon decay values. We also played around with a target model to stabilise training.
 
-Changes to the reward function were the most impactful. Punishing jumping to discourage random jumps resulted in the model never jumping. However, solely rewarding progress in the level caused the model to struggle in consistently identifying patterns.. 
+Changes to the reward function were the most impactful. Punishing jumping to discourage random jumps resulted in the model never jumping. However, solely rewarding progress in the level caused the model to struggle in consistently identifying patterns.
 
 In some cases, the model would initially learn to perform quite well but worsen over time. The main hypothesis is that this is due to the low framerate. While the screen can be recorded at 30 to 60 frames per second, model predictions slow this process down significantly. A potential solution would be to run predictions in parallel. 
 
