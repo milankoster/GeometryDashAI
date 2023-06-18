@@ -1,10 +1,11 @@
 import gd
+import time
 import keyboard as keyboard
 
 from common.action import Action
-from common.constants import image_size
+from common.constants import *
 from game_interface import GeometryDashInterface
-from image_processor import ImageProcessor
+from common.image_processor import ImageProcessor
 
 
 class GeometryDashEnvironment:
@@ -14,18 +15,12 @@ class GeometryDashEnvironment:
         self.image_processor = ImageProcessor()
 
         self.action_space = 2
-        self.state_space = image_size
-
-        self.highest_rounded_percent = 0
         self.revived = False
 
     def step(self, action):
         self.handle_action(action)
 
-        reward = 0
-
-        reward += self.memory.percent * 10
-
+        reward = self.memory.percent * 10
         done = self.memory.is_dead()
 
         return self.get_state(), reward, done
@@ -33,6 +28,7 @@ class GeometryDashEnvironment:
     def handle_action(self, action):
         if action == Action.JUMP:
             self.game_interface.jump()
+            time.sleep(sleep_duration)
         elif action == Action.NOTHING:
             self.game_interface.no_jump()
         else:
@@ -40,10 +36,8 @@ class GeometryDashEnvironment:
 
     def get_state(self):
         raw_image = self.game_interface.screenshot()
-        if raw_image is None:
-            return None
-
         processed_image = self.image_processor.process_screenshot(raw_image)
+
         return processed_image
 
     def has_revived(self):
