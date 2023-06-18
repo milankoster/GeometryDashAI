@@ -66,8 +66,8 @@ class Trainer:
 
         return model
 
-    def act(self, state, evaluate=False):
-        if np.random.rand() <= self.epsilon and not evaluate:
+    def act(self, state):
+        if np.random.rand() <= self.epsilon:
             return random.randrange(self.env.action_space)
         act_values = self.target_model.predict(state, verbose=0)
         act_values = act_values[0]
@@ -198,7 +198,8 @@ class Trainer:
             if not self.env.has_revived():
                 continue
 
-            action = self.act(current_state, evaluate=True)
+            act_values = self.model.predict(current_state, verbose=0)
+            action = np.argmax(act_values[0])
 
             new_state, reward, done = self.env.step(Action(action))
 
@@ -208,6 +209,7 @@ class Trainer:
 
             if done:
                 episode_jumps = self.env.memory.jumps - self.total_jumps
+                self.total_jumps = self.env.memory.jumps
 
                 print(f'EVALUATION: level progress: {self.env.memory.percent}, '
                       f'reward: {epi_reward}, jumps: {episode_jumps}')
